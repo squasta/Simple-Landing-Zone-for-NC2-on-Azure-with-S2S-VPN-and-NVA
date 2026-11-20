@@ -1,5 +1,9 @@
 
-# 1. Créer la table de routage
+##################################################################################################
+# Route to Flow VPC ERP (Externally Routable Prefixes) in Azure Hub VNet for GatewaySubnet       #
+##################################################################################################
+
+# 1. Create an Azure Route Table for AzureGatewaySubnet (it can be also used by other subnets like HubSubnet)
   az network route-table create \
   --resource-group RG-NC2 \
   --name RT-FLOW-VPCS \
@@ -7,7 +11,7 @@
   --disable-bgp-route-propagation true
 
 
-# 2. Ajouter les routes  
+# 2. Add routes to Nutanix Flow CIDRs (aka ERP : Externally Routable Prefixes)    
 az network route-table route create \
   --resource-group RG-NC2 \
   --route-table-name RT-FLOW-VPCS \
@@ -17,7 +21,7 @@ az network route-table route create \
   --next-hop-ip-address 192.168.12.54
 
 
-# 3. Associer la table aux subnets du Spoke
+# 3. Associate Azure Route Table to GatewaySubnet in Azure Hub VNet
 az network vnet subnet update \
   --resource-group RG-NC2 \
   --vnet-name hub-vnet-germanywestcentral \
@@ -26,9 +30,13 @@ az network vnet subnet update \
 
 
 
------------
 
-# 1. Créer la table de routage pour le subnet AzureFirewall
+
+#################################################################################################################
+# Route to Flow VPC ERP (Externally Routable Prefixes) & to Internet in Azure Hub VNet for AzureFirewallSubnet  #
+#################################################################################################################
+
+# 1. Create an Azure Route Table for AzureFirewall subnet
   az network route-table create \
   --resource-group RG-NC2 \
   --name RT-AzureFirewall\
@@ -36,7 +44,7 @@ az network vnet subnet update \
  # --disable-bgp-route-propagation true
 
 
-# 2. Ajouter les routes  
+# 2. Add routes to Nutanix Flow CIDRs and to Internet 
 az network route-table route create \
   --resource-group RG-NC2 \
   --route-table-name RT-AzureFirewall \
@@ -53,7 +61,7 @@ az network route-table route create \
   --next-hop-type Internet
 
 
-# 3. Associer la table aux subnets du Spoke
+# 3. Associate Azure Route Table to AzureFirewallSubnet in Azure Hub VNet
 az network vnet subnet update \
   --resource-group RG-NC2 \
   --vnet-name hub-vnet-germanywestcentral \
