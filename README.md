@@ -276,6 +276,11 @@ There is 2 ways to do that :
 
 Let's do the second way
 
+<img width='800' src='./images/AzureFW-rules.png'/> 
+
+Finally everything works !
+
+<img width='800' src='./images/test-success.png'/> 
 
 10. When you want to destroy the Nutanix Cluster, use the NC2 Portal (https://cloud.nutanix.com) to terminate it.
 
