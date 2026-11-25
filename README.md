@@ -92,6 +92,9 @@ After the deployment is successfull, __you have additional steps to perform for 
 
 - Option 2 - Communication between NC2 cluster (and its workloads) and on-premises Datacenter do no go through NVA. Only network traffic from NC2 cluster (and it workloads) to Internet goes through the NVA.
 
+
+
+
 __EXTRA IMPORTANT : Next steps documented are for Option 2__
 
 1. __Update Azure Route Table associated to NC2 subnets__
@@ -113,6 +116,8 @@ Let's add a route to on premises CIDR
 
 
 2. __Connection to Prism Central and Nutanix Flow Networking configuration__ : [Flow VPC](https://squasta.github.io/configurationvpcazure.html) using NAT and NoNAT (= routing path).
+
+- Create a Nutanix Flow Subnet named __overlay-external-subnet-nonat__ in the transit-vpc
 
 - Create a Nutanix Flow VPC with NoNAT (routing) path
 
@@ -182,7 +187,7 @@ This is mandatory because :
 
 <img width='400' src='./images/AzureFirewallRTprerequisites.png'/> 
 
-3- We want to control outbound access to Internet through Azure Firewall (our NVA) so we have 0.0.0.0/0 route to AzureFirewallNVA in other Route Table (RT-FLOW-VPCS)
+3- We want to control outbound access to Internet through Azure Firewall (our NVA) so we already have 0.0.0.0/0 route to AzureFirewall NVA in other Route Table (RT-FLOW-VPCS)
 
 
 
@@ -224,7 +229,7 @@ Now your Azure landing zone should be like that :
 <img width='800' src='./images/RT-Flow-VPCs-on-AzureFirewallSubnet.png'/> 
 
 
-- Do not forget opening Protocols & Port for Inbound connection on the Azure Network Security Group applied to External Azure NIC of Nutanix Flow Gateway 
+- Do not forget opening Protocols & Port for Inbound connection on the Azure Network Security Group applied to External Azure NIC of Nutanix Flow Gateway (basically : open incoming traffic to Flow VPCs)
 
 Find the Security Group in the Azure resource group where the cluster has been deployed. Name should be something like FGW_XXXXXXXX_EXTERNAL_SUBNET_SG
 
@@ -253,7 +258,7 @@ Create an outbound rule to allow outbound trafic to DC CIDR range
 
 Ubuntu2-001 is connected to user-vpc-2-subnet-1 and has the IP address 192.168.201.38 
 
-Let's connect this VM from a system running on-premises (here my Macbook Pro)
+Let's connect this VM from a system running on-premises (here my Macbook Pro has IP address 10.0.0.10)
 
 <img width='800' src='./images/ConnectivityTest-fromDC.png'/> 
 
@@ -271,10 +276,10 @@ This is normal : the current configuration of Azure Firewall allows all outbound
 We need to allow access for Flow VPC user-vpc-2 CIDR.
 
 There is 2 ways to do that :
-- update the [Azure IP Group](https://learn.microsoft.com/en-us/azure/firewall/ip-groups) named nc2-ip-group by adding Flow VPC CIDR
-- create a dedicated Azure Firewall rule
+- Update the [Azure IP Group](https://learn.microsoft.com/en-us/azure/firewall/ip-groups) named nc2-ip-group by adding Flow VPC CIDR
+- Or create a dedicated Azure Firewall rule
 
-Let's do the second way
+Let's do the second way (a new Azure Firewall rule)
 
 <img width='800' src='./images/AzureFW-rules.png'/> 
 
