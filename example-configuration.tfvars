@@ -18,8 +18,6 @@ PCVnetName="pc-vnet-germanywestcentral"
 PCVnetCIDR=["192.168.11.0/24"]
 PCSubnetName="cluster-pc-subnet-germanywestcentral"
 PCSubnetCIDR=["192.168.11.0/25"]
-NATGwClusterName="mgmt-nat-gw-germanywestcentral"
-PublicIPClusterName="publicIP-mgmt-nat-gw-germanywestcentral"
 #
 # Flow Gateway(s) Azure Virtual Network
 #
@@ -31,21 +29,20 @@ FgwInternalSubnetName="fgw-internal-subnet-germanywestcentral"
 FgwInternalSubnetCIDR=["192.168.13.0/25"]
 BGPSubnetName="bgp-subnet-germanywestcentral"
 BGPSubnetCIDR=["192.168.13.128/25"]
-NATGwPCName="pc-nat-gw-germanywestcentral"
-PublicIPPCName="publicIP-PC-nat-gw-germanywestcentral"
 #
 # Azure Bastion (1= Enable, 0= Not deploy)
 #
 EnableAzureBastion=1
 PublicBastionIPName="bastion-public-ip-germanywestcentral"
 AzureBastionHostName="bastion-host-germanywestcentral"
-AzureBastionSubnetCIDR=["192.168.11.128/25"]
+HubBastionSubnetCIDR=["172.16.3.0/24"]
 AzureBastionSKU="Standard"
 #
 # Jumbox VM (1= Enable, 0= Not deploy)
 #
-EnableJumboxVM=1
+EnableJumboxVM=0
 AdminUsername="adminNC2"
+AdminPassword="PuttingHereAPassword1sNotAGoodIdeaIn2026"    # change that, or use an environment variable or better a secret in Azure Key Vault 
 VMBastionNicName="jumbox-nic-germanywestcentral"
 VMJumpboxName="jumbox-germanywestcentral"
 HostnameVMJumbox="myjumbox"
@@ -55,19 +52,16 @@ HostnameVMJumbox="myjumbox"
 HubVNetName= "hub-vnet-germanywestcentral"
 HubVNetCIDR=["172.16.0.0/16"]
 HubSubnetCIDR=["172.16.0.0/24"]
-HubVPNGWSubnetCIDR=["172.16.250.0/27"]
+HubFirewallSubnetCIDR=["172.16.1.0/24"]
+HubVPNGWSubnetCIDR=["172.16.2.0/27"]
 #
 # Azure VPN Gateway for Site to Site VPN with on premises Datacenter
 #
-VPNSiteToSiteSharedKey="mysharedkey1234"  # Replace with your actual shared key for the VPN connection
+VPNSiteToSiteSharedKey="MY-PRESHARED-KEY"  # Replace with your actual shared key for the VPN connection
 NATGwFGWName="fgw-nat-gw-germanywestcentral"
 PublicIPFGWName="publicIP-fgw-nat-gw-germanywestcentral"
-PublicIPRemoteVPNGateway="1.2.3.4"        # Replace with your actual public IP for the remote VPN gateway
-OnPremisesDataCenterCIDRs=["10.0.0.0/16"] # Replace with all IP ranges that will be on the other side of VPN tunnel
+PublicIPRemoteVPNGateway="1.2.3.4"          # Replace with your actual public IP for the remote VPN gateway
+OnPremisesDataCenterCIDRs=["10.0.0.0/16"]   # Replace with all IP ranges that will be on the other side of VPN tunnel
+# Azure Firewall
+IPGroupNC2SubnetsCIDR=["192.168.10.0/24","192.168.11.0/24","192.168.12.0/23", "172.16.0.0/24"]  # CIDRs for NC2 subnets and Hub VNet
 #
-# For Multicloud Snapshot Technology DR with Azure Blob Storage (AOS 7.3 and more)
-#
-MSTStorageAccountName="mststorageaccount"   # this name must be unique
-MSTVNetCIDR=["192.168.14.0/27"]
-MSTSubnetCIDR=["192.168.14.0/28"]
-MSTDummySubnetCIDR=["192.168.14.16/28"]
